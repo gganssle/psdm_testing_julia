@@ -26,5 +26,5 @@
 	title=""
 	data_format="native_float"
 	esize=4
-	in="/home/gram/ssog/psdm_testing_julia/scripts/../dat/wav@data@"
-	headers="/home/gram/ssog/psdm_testing_julia/scripts/../dat/wav@headers@"
+	in="/home/gram/ssog/psdm_testing_julia/nbs/../dat/wav@data@"
+	headers="/home/gram/ssog/psdm_testing_julia/nbs/../dat/wav@headers@"
