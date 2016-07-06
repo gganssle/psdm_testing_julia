@@ -205,7 +205,11 @@ function grgwem(m::ASCIIString,d::ASCIIString,adj=true;pspi=true,nref=5,damping=
 		close(stream_m)
 		close(stream_h)
 
-	else
+print("break 1.0 grgwem.jl\n")
+
+	else # (adj != true)
+
+print("break 2.0 grgwem.jl\n")
 
 		m_m = ParseDataName(m)
 		m_h = ParseHeaderName(m)
@@ -291,6 +295,8 @@ function grgwem(m::ASCIIString,d::ASCIIString,adj=true;pspi=true,nref=5,damping=
 		close(stream_m)
 		close(stream_h)
 
+print("break 3.0 grgwem.jl\n")
+
 		@sync @parallel for ishot = 1 : nshot
 			a = shotwem(shot_list[ishot])
 		end
@@ -301,6 +307,9 @@ function grgwem(m::ASCIIString,d::ASCIIString,adj=true;pspi=true,nref=5,damping=
 				"s","m","m","m","m",
 				"")
 		j = 1
+
+print("break 4.0 grgwem.jl\n")
+
 		for ishot = 1 : nshot
 			d_shot,h_shot,e = SeisRead(shot_list[ishot].d)
 			SeisWrite(d,d_shot,h_shot,extent,itrace=j)
@@ -313,6 +322,9 @@ function grgwem(m::ASCIIString,d::ASCIIString,adj=true;pspi=true,nref=5,damping=
 			end			
 		end	
 	end
+
+print("break 5.0 grgwem.jl\n")
+
 end
 
 type Shot

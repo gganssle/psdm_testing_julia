@@ -36,6 +36,7 @@ void wem(float **d, float **m, float **wav,
 		for (ix=0;ix<nmx*nmy;ix++) pd[ix][iz] = 1.0/vel[ix][iz] - po[iz];
 	}
 
+/**/	printf("break 1.0 wem.c\n");
 
 	/****************************************************************************************/
 	float **vref,vmin,vmax,v;
@@ -95,6 +96,8 @@ void wem(float **d, float **m, float **wav,
 	for (it=0;it<nt;it++)  d_t[it] = 0.;  
 	for (iw=0;iw<nw;iw++)  d_w[iw] = 0.; 
 
+/**/	printf("break 2.0 wem.c\n");
+
 	/* set up fftw plans and pass them to the OMP region of the code */
 	a  = fftwf_malloc(sizeof(fftwf_complex) * nkx*nky);
 	b  = fftwf_malloc(sizeof(fftwf_complex) * nkx*nky);
@@ -116,12 +119,15 @@ void wem(float **d, float **m, float **wav,
 	for (ix=0;ix<nmx*nmy;ix++) for (iw=0;iw<nw;iw++) d_s_wx[ix][iw] = 0.;
 	for (it=0;it<nt;it++) d_t[it] = wav[0][it];
 
-printf("hello from c \n");
+/**/	printf("break 3.0 wem.c\n");
 
 	f_op(d_w,d_t,nw,nt,1); /* d_t to d_w */
+
+/**/	printf("break 3.5 wem.c\n");
+
 	for (iw=0;iw<nw;iw++) d_s_wx[igx*nmy + igy][iw] = d_w[iw];
 
-printf("hello from c post f_op\n");
+/**/	printf("break 4.0 wem.c\n");
 
 	/* receiver wavefield*/
 	if (adj){
@@ -138,7 +144,7 @@ printf("hello from c post f_op\n");
 	}
 	else{
 
-printf("hello from c (else) \n");
+/**/	printf("break 5.0 wem.c\n");
 
 		for (ix=0;ix<nmx*nmy;ix++){
 			for (iw=0;iw<nw;iw++){
@@ -146,8 +152,6 @@ printf("hello from c (else) \n");
 			}
 		}
 	}
-
-//	printf("hello from c \n");
 
 	nthread = omp_thread_count();
 	if (adj){
@@ -173,8 +177,6 @@ printf("hello from c (else) \n");
 		}
 	}
 
-//	printf("hello from c \n");
-
 	progress = 0.;
 #pragma omp parallel for private(iw) shared(m_threads,d_g_wx,d_s_wx)
 	for (iw=ifmin;iw<ifmax;iw++){ 
@@ -199,6 +201,8 @@ printf("hello from c (else) \n");
 			for (it=0;it<nt;it++) d[ix][it] = d_t[it];
 		}
 	}
+
+/**/	printf("break 6.0 wem.c\n");
 
 	free1int(n); 
 	fftwf_free(a);
@@ -500,27 +504,54 @@ void f_op(complex *m,float *d,int nw,int nt,bool adj)
 	ntfft = (nw-1)*2;
 
 	if (adj){ /* data --> model */
+
+/**/	printf("break 0.1 f_op\n");
+
 		out1a = fftwf_malloc(sizeof(fftwf_complex) * nw);
 		in1a = alloc1float(ntfft);
+
+/**/	printf("break 0.2 f_op\n");
+
 		p1a = fftwf_plan_dft_r2c_1d(ntfft, in1a, (fftwf_complex*)out1a, FFTW_ESTIMATE);
 		for(it=0;it<nt;it++) in1a[it] = d[it];
 		for(it=nt;it<ntfft;it++) in1a[it] = 0.;
+
+/**/	printf("break 0.3 f_op\n");
+
 		fftwf_execute(p1a); 
 		for(iw=0;iw<nw;iw++) m[iw] = out1a[iw];
+
+/**/	printf("break 0.4 f_op\n");
+
 		fftwf_destroy_plan(p1a);
 		fftwf_free(in1a); fftwf_free(out1a);
+
+/**/	printf("break 0.5 f_op\n");
+
 	}
 
 	else{ /* model --> data */
+
+/**/	printf("break 1.0 f_op\n");
+
 		out1b = alloc1float(ntfft);
 		in1b = fftwf_malloc(sizeof(fftwf_complex) * ntfft);
 		p1b = fftwf_plan_dft_c2r_1d(ntfft, (fftwf_complex*)in1b, out1b, FFTW_ESTIMATE);
+
+/**/	printf("break 2.0 f_op\n");
+
 		for(iw=0;iw<nw;iw++) in1b[iw] = m[iw];
 		for(iw=nw;iw<ntfft;iw++) in1b[iw] = 0.;
 		fftwf_execute(p1b); 
+
+/**/	printf("break 3.0 f_op\n");
+
 		for(it=0;it<nt;it++) d[it] = out1b[it];
 		fftwf_destroy_plan(p1b);
 		fftwf_free(in1b); fftwf_free(out1b);
+
+/**/	printf("break 4.0 f_op\n");
+
 	}
 
 	return;

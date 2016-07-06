@@ -67,6 +67,8 @@ int main (int argc, char *argv[])
 	oy = h_vel[0].my;
 	dy = dx;
 
+/**/	printf("break 1.0 shotwem.c\n");
+
 	if (adj){
 		h_d = allocSeisHeader(nx*ny);
 		d = alloc2float(nt,nx*ny);
@@ -96,6 +98,9 @@ int main (int argc, char *argv[])
 		for (ix=0;ix<nx*ny;ix++) h_d[ix].hx = h_m[ix].mx - sx;
 		for (ix=0;ix<nx*ny;ix++) h_d[ix].hy = h_m[ix].my - sy;  		
 	}
+
+/**/	printf("break 2.0 shotwem.c\n");
+
 	wem(d,
 	    m,
 	    wav,
@@ -110,6 +115,9 @@ int main (int argc, char *argv[])
 	    padt,padx,
 	    adj,pspi,
 	    verbose);
+
+/**/	printf("break 3.0 shotwem.c\n");
+
 	if (adj){
 		for (ix=0;ix<nx*ny;ix++) h_m[ix].mx = h_d[ix].gx;
 		for (ix=0;ix<nx*ny;ix++) h_m[ix].my = h_d[ix].gy;
@@ -128,6 +136,9 @@ int main (int argc, char *argv[])
 		fh.n3 = ny; fh.o3 = oy; fh.d3 = dy;
 		SeisWrite(d_name,d,h_d,&fh);
 	}
+
+/**/	printf("break 4.0 shotwem.c\n");
+
 	free2float(d); 
 	free2float(m); 
 	free2float(vel); 
